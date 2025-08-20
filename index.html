@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CTA</title>
+  <style>
+    /* Reset simples */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#111}
+    
+    /* Fundo interativo: gradiente animado */
+    .bg{
+      position:fixed;inset:0;z-index:-1;display:block;background:linear-gradient(120deg,#0f172a,#0ea5e9,#7c3aed);
+      background-size:600% 600%;animation:moveBG 20s ease infinite;
+    }
+    @keyframes moveBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+    /* Layout */
+    .app{max-width:960px;margin:3rem auto;padding:2rem;background:rgba(255,255,255,0.85);backdrop-filter: blur(6px);border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.25)}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+    h1{font-size:1.25rem}
+
+    /* Forms */
+    .forms{display:flex;gap:1rem}
+    .card{flex:1;padding:1rem;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(250,250,250,0.7));border:1px solid rgba(0,0,0,0.04)}
+    label{display:block;font-size:0.85rem;margin-bottom:0.35rem}
+    input[type=email],input[type=password],input[type=text]{width:100%;padding:0.6rem;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:0.6rem}
+    button{padding:0.6rem 0.9rem;border-radius:10px;border:0;background:#0ea5e9;color:white;font-weight:600;cursor:pointer}
+    button.secondary{background:#7c3aed}
+
+    /* Dashboard */
+    .dashboard{display:grid;grid-template-columns:1fr 320px;gap:1rem;align-items:start}
+    .panel{padding:1rem;border-radius:10px;background:white;border:1px solid rgba(0,0,0,0.04)}
+    .big-display{display:flex;gap:1rem;align-items:center}
+    .meter{flex:1;padding:1rem;border-radius:8px;background:linear-gradient(180deg,#f8fafc,#fff);text-align:center}
+    .meter .value{font-size:2.5rem;font-weight:700}
+    .meter .label{font-size:0.9rem;color:#475569}
+
+    .controls{display:flex;flex-direction:column;gap:0.6rem}
+    .row{display:flex;gap:0.6rem}
+    .small{padding:0.5rem;border-radius:8px;border:1px solid #e2e8f0;background:#fbfbff}
+
+    footer{margin-top:1rem;text-align:center;color:#334155;font-size:0.85rem}
+
+    /* Responsivo */
+    @media(max-width:880px){.dashboard{grid-template-columns:1fr}.forms{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden></div>
+  <main class="app">
+    <header>
+      <h1>CTA</h1>
+      
+      <div>
+        <span id="userEmail" style="margin-right:0.7rem"></span>
+        <button id="btnSignOut" style="display:none">Sair</button>
+      </div>
+    </header>
+    
+    <section class="forms" id="authSection">
+      <div class="card">
+        <h3>Registrar</h3>
+        <label for="regEmail">E‑mail</label>
+        <input id="regEmail" type="email" placeholder="seu@email.com">
+        <label for="regPassword">Senha (máx 12 caracteres)</label>
+        <input id="regPassword" type="password" maxlength="12" placeholder="senha até 12 chars">
+        <button id="btnRegister">Criar conta</button>
+        <p id="regMsg" style="color:#b91c1c;margin-top:0.5rem"></p>
+      </div>
+
+      <div class="card">
+        <h3>Entrar</h3>
+        <label for="loginEmail">E‑mail</label>
+        <input id="loginEmail" type="email" placeholder="seu@email.com">
+        <label for="loginPassword">Senha</label>
+        <input id="loginPassword" type="password" maxlength="12">
+        <button id="btnLogin">Entrar</button>
+        <p id="loginMsg" style="color:#b91c1c;margin-top:0.5rem"></p>
+      </div>
+    </section>
+
+    <!-- Painel principal (visível após login) -->
+    <section id="panel" style="display:none">
+      <div class="dashboard">
+        <div class="panel">
+          <h3>Leituras ao vivo do cta</h3>
+          <div class="big-display">
+            <div class="meter">
+              <div class="label">Temperatura</div>
+              <div id="tempVal" class="value">-- °C</div>
+              <div id="tempTime" style="font-size:0.85rem;color:#64748b;margin-top:0.4rem">—</div>
+            </div>
+
+            <div class="meter">
+              <div class="label">Humidade</div>
+              <div id="humVal" class="value">-- %</div>
+              <div id="humTime" style="font-size:0.85rem;color:#64748b;margin-top:0.4rem">—</div>
+            </div>
+          </div>
+
+          <hr style="margin:1rem 0">
+
+          <h4>Comandos</h4>
+          <div class="controls">
+            <div>
+              <label for="fanThreshold">Temperatura para ligar a fan (°C)</label>
+              <div class="row">
+                <input id="fanThreshold" type="text" class="small" placeholder="ex: 28">
+                <button id="btnSendThreshold">Enviar</button>
+              </div>
+              <p id="cmdMsg" style="color:#065f46;margin-top:0.4rem"></p>
+            </div>
+
+            <div>
+              <label>Umidificador</label>
+              <div class="row">
+                <button id="btnToggleHumid" class="secondary">Ligar/Desligar</button>
+                <div id="humidState" class="small" style="display:flex;align-items:center;justify-content:center;min-width:120px">Estado: —</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel">
+          <h3>Informações</h3>
+          <p style="font-size:0.95rem;color:#334155">feito por nicolas e juliano 😎😎 </p>
+          
+
+          <h4 style="margin-top:1rem">Últimos comandos</h4>
+          <pre id="lastCommands" style="background:#f8fafc;padding:0.6rem;border-radius:8px;overflow:auto;max-height:220px">—</pre>
+        </aside>
+      </div>
+
+      <footer>COPYRIGTH ©</footer>
+      <p></p>
+      <footer>ETEC RUBENS DE FARIA E SOUZA</footer>
+    </section>
+
+    <!-- Firebase SDKs e app code -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAb68Vpv9kb7V9enM8mL7iqceDSNALDQuM",
+        authDomain: "app-umidificador-53653.firebaseapp.com",
+        databaseURL: "https://app-umidificador-53653-default-rtdb.firebaseio.com",
+        projectId: "app-umidificador-53653",
+        storageBucket: "app-umidificador-53653.firebasestorage.app",
+        messagingSenderId: "218487721780",
+        appId: "1:218487721780:web:8666c5235afa7a9195df61",
+        measurementId: "G-J0VN01129M"
+      };
+
+      // Inicializar Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.database(); // Adicionado esta linha
+
+      // Elementos
+      const authSection = document.getElementById('authSection');
+      const panel = document.getElementById('panel');
+      const btnRegister = document.getElementById('btnRegister');
+      const btnLogin = document.getElementById('btnLogin');
+      const btnSignOut = document.getElementById('btnSignOut');
+      const userEmail = document.getElementById('userEmail');
+
+      const regEmail = document.getElementById('regEmail');
+      const regPassword = document.getElementById('regPassword');
+      const regMsg = document.getElementById('regMsg');
+
+      const loginEmail = document.getElementById('loginEmail');
+      const loginPassword = document.getElementById('loginPassword');
+      const loginMsg = document.getElementById('loginMsg');
+
+      const tempVal = document.getElementById('tempVal');
+      const humVal = document.getElementById('humVal');
+      const tempTime = document.getElementById('tempTime');
+      const humTime = document.getElementById('humTime');
+      const fanThreshold = document.getElementById('fanThreshold');
+      const btnSendThreshold = document.getElementById('btnSendThreshold');
+      const cmdMsg = document.getElementById('cmdMsg');
+      const btnToggleHumid = document.getElementById('btnToggleHumid');
+      const humidState = document.getElementById('humidState');
+      const lastCommands = document.getElementById('lastCommands');
+
+      let currentUid = null;
+
+      // Register
+      btnRegister.addEventListener('click', async ()=>{
+        regMsg.textContent = '';
+        const email = regEmail.value.trim();
+        const pass = regPassword.value;
+        if(!email || !pass){ regMsg.textContent = 'Preencha todos os campos.'; return }
+        if(pass.length > 12){ regMsg.textContent = 'A senha precisa ter no máximo 12 caracteres.'; return }
+        try{
+          await auth.createUserWithEmailAndPassword(email, pass);
+          regMsg.style.color = '#065f46'; regMsg.textContent = 'Conta criada!';
+        }catch(err){ regMsg.style.color='#b91c1c'; regMsg.textContent = err.message }
+      });
+
+      // Login
+      btnLogin.addEventListener('click', async ()=>{
+        loginMsg.textContent = '';
+        const email = loginEmail.value.trim();
+        const pass = loginPassword.value;
+        if(!email || !pass){ loginMsg.textContent = 'Preencha todos os campos.'; return }
+        try{
+          await auth.signInWithEmailAndPassword(email, pass);
+        }catch(err){ loginMsg.style.color='#b91c1c'; loginMsg.textContent = err.message }
+      });
+
+      // Sign out
+      btnSignOut.addEventListener('click', ()=> auth.signOut());
+
+      // Observador de autenticação
+      auth.onAuthStateChanged(user=>{
+        if(user){
+          currentUid = user.uid;
+          userEmail.textContent = user.email;
+          btnSignOut.style.display = 'inline-block';
+          authSection.style.display = 'none';
+          panel.style.display = 'block';
+          startListeners();
+        }else{
+          currentUid = null;
+          userEmail.textContent = '';
+          btnSignOut.style.display = 'none';
+          authSection.style.display = 'flex';
+          panel.style.display = 'none';
+          stopListeners();
+        }
+      });
+
+      // Listeners de DB
+      let sensorRef = null;
+      let commandsRef = null;
+
+      function startListeners(){
+        if(!currentUid) return;
+        sensorRef = db.ref('sensors/' + currentUid);
+        sensorRef.on('value', snapshot=>{
+          const v = snapshot.val();
+          if(!v) return;
+          if(v.temperature !== undefined) tempVal.textContent = v.temperature + ' °C';
+          if(v.humidity !== undefined) humVal.textContent = v.humidity + ' %';
+          if(v.ts) {
+            const d = new Date(v.ts);
+            tempTime.textContent = d.toLocaleString();
+            humTime.textContent = d.toLocaleString();
+          }
+        });
+
+        commandsRef = db.ref('commands/' + currentUid);
+        commandsRef.on('value', snapshot=>{
+          const v = snapshot.val();
+          if(!v) return;
+          // mostrar último comando e estado
+          lastCommands.textContent = JSON.stringify(v, null, 2);
+          if(v.humidifierOn !== undefined) {
+            humidState.textContent = 'Estado: ' + (v.humidifierOn ? 'Ligado' : 'Desligado');
+          }
+        });
+      }
+
+      function stopListeners(){
+        if(sensorRef) sensorRef.off();
+        if(commandsRef) commandsRef.off();
+        lastCommands.textContent = '—';
+        humidState.textContent = 'Estado: —';
+      }
+
+      // Enviar threshold
+      btnSendThreshold.addEventListener('click', async ()=>{
+        cmdMsg.textContent = '';
+        if(!currentUid){ cmdMsg.textContent = 'Usuário não autenticado.'; return }
+        const val = parseFloat(fanThreshold.value);
+        if(Number.isNaN(val)){ cmdMsg.style.color='#b91c1c'; cmdMsg.textContent = 'Digite um número válido.'; return }
+        const payload = { fanThreshold: val, updatedAt: Date.now() };
+        try{
+          await db.ref('commands/' + currentUid + '/fan').set(payload);
+          cmdMsg.style.color = '#065f46'; cmdMsg.textContent = 'Enviado.';
+        }catch(err){ cmdMsg.style.color = '#b91c1c'; cmdMsg.textContent = 'Erro: '+err.message }
+      });
+
+      // Alternar umidificador
+      btnToggleHumid.addEventListener('click', async ()=>{
+        if(!currentUid) return;
+        try{
+          const ref = db.ref('commands/' + currentUid + '/humidifierOn');
+          // leitura atual e troca
+          const snap = await ref.once('value');
+          const cur = snap.exists() ? snap.val() : false;
+          await ref.set(!cur);
+        }catch(err){ alert('Erro: '+err.message) }
+      });
+
+      // Proteções simples: evitar XSS em strings
+      function esc(s){ return String(s).replace(/[&<>\"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[c]) }
+    </script>
+  </main>
+</body>
+</html>
