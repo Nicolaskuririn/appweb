@@ -8,12 +8,12 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "https://lh3.googleusercontent.com/gg/AAHar4dcF4qP0CDlnmz_AY2BTpEcdo9BUdGhE32_azDh37niT2C-Mm8FzmFez6VG5DWUq2yOK1O0xvkD3QqB_uIdoQmfGEMtAXuHuM9dBhIKZM7-JHCGgOVpV7IdDltvP8JglnBoKOe1jFEVSUIWoStgypRZRNLebVhdk46i2gP_RF-iOExRamEuhIoSx8veqRHTJHjxTWyxbVAcs_Q2VLW9l1uUtrDkEIb1YPugWNGekmzbHVX2HgfzIV0XIjlK1b5j1t8Bm7pTM_iuO3XWFluMD2mHB1VzutK1sCk9l7CBdRP86e0G-jagaUOomMuYaKqI0iodXDpxi9_DWzbd1ns4G9U=s1024",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "https://lh3.googleusercontent.com/gg/AAHar4dcF4qP0CDlnmz_AY2BTpEcdo9BUdGhE32_azDh37niT2C-Mm8FzmFez6VG5DWUq2yOK1O0xvkD3QqB_uIdoQmfGEMtAXuHuM9dBhIKZM7-JHCGgOVpV7IdDltvP8JglnBoKOe1jFEVSUIWoStgypRZRNLebVhdk46i2gP_RF-iOExRamEuhIoSx8veqRHTJHjxTWyxbVAcs_Q2VLW9l1uUtrDkEIb1YPugWNGekmzbHVX2HgfzIV0XIjlK1b5j1t8Bm7pTM_iuO3XWFluMD2mHB1VzutK1sCk9l7CBdRP86e0G-jagaUOomMuYaKqI0iodXDpxi9_DWzbd1ns4G9U=s1024",
       "sizes": "512x512",
       "type": "image/png"
     }
